@@ -1,0 +1,121 @@
+{%extends 'base.html'%}
+{%block navbar%}{%include '/nav.html'%}{%endblock%}
+
+{%block content%}
+{%include 'carousel.html'%}
+
+
+{%for post in recent_post[:4]%}
+{%if post.id == 1%}
+<div class="container">
+    <!-- START THE FEATURETTES -->
+    <hr class="featurette-divider">
+    <div class="row featurette">
+        <div class="col-md-7">
+            <a href="{{ url_for('show_post', post_id=post.id) }}">
+                <h2 class="post-title">{{ post.title }}</h2>
+                <h4 class="featurette-heading">{{post.subtitle}}</h4>
+            </a>
+            <h5><span class="lead">{{ post.body[:200]|safe }}...</span></h5>
+            <p class="post-meta">
+                Posted by
+                <a href="https://www.flickr.com/photos/148843203@N05/">{{post.author.name}}</a>
+                on {{post.date}}
+            </p>
+            <p class="post-meta">
+                <a href="{{url_for('show_post', post_id=post.id)}}">Read More</a>
+            </p>
+        </div>
+        <div class="col-md-5">
+            <img src="{{post.img_url}}" class="img-fluid mx-auto d-block w-100 rounded border border-5 float-start"
+                 alt="...">
+        </div>
+    </div>
+    {%endif%}
+    {%endfor%}
+
+    <hr class="featurette-divider">
+
+    {%for post in recent_post%}
+    {%if post.id == 2%}
+    <div class="row featurette">
+        <div class="col-md-7 order-md-2">
+            <a href="{{ url_for('show_post', post_id=post.id) }}">
+                <h2 class="post-title">{{ post.title }}</h2>
+                <h4 class="featurette-heading">{{post.subtitle}}</h4>
+            </a>
+            <h5><span class="lead notbold">{{ post.body[:200]|safe }}...</span></h5>
+            <p class="post-meta">
+                Posted by
+                <a href="https://www.flickr.com/photos/148843203@N05/">{{post.author.name}}</a>
+                on {{post.date}}
+            </p>
+            <p class="post-meta">
+                <a href="{{url_for('show_post', post_id=post.id)}}">Read More</a>
+            </p>
+        </div>
+        <div class="col-md-5 order-md-1">
+            <img src="{{post.img_url}}" class="img-fluid mx-auto d-block w-100 rounded border border-5 float-end"
+                 alt="...">
+        </div>
+    </div>
+    {%endif%}
+    {%endfor%}
+
+
+    {%for post in recent_post%}
+    {%if post.id == 3%}
+    <div class="container">
+        <!-- START THE FEATURETTES -->
+        <hr class="featurette-divider">
+        <div class="row featurette">
+            <div class="col-md-7">
+                <a href="{{ url_for('show_post', post_id=post.id) }}">
+                    <h2 class="post-title">{{ post.title }}</h2>
+                    <h4 class="featurette-heading">{{post.subtitle}}</h4>
+                </a>
+                <h5><span class="lead notbold">{{ post.body[:200]|safe }}...</span></h5>
+                <p class="post-meta">
+                    Posted by
+                    <a href="https://www.flickr.com/photos/148843203@N05/">{{post.author.name}}</a>
+                    on {{post.date}}
+                </p>
+                <p class="post-meta">
+                    <a href="{{url_for('show_post', post_id=post.id)}}">Read More</a>
+                </p>
+            </div>
+            <div class="col-md-5">
+                <img src="{{post.img_url}}" class="img-fluid mx-auto d-block w-100 rounded border border-5 float-start"
+                     alt="...">
+            </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+
+
+        <!-- New Post -->
+        <!-- Only show Create Post button if user id is 1 (admin user) -->
+
+        {% if current_user.id == 1: %}
+        <div class="d-flex justify-content-end my-4 text-uppercase">
+            <a
+                    class="btn btn-primary float-right"
+                    href="{{url_for('add_new_post')}}"
+            >Create New Post</a>
+
+        </div>
+
+        {% endif %}
+
+        <!-- Pager-->
+        <div class="d-flex justify-content-end my-4">
+            <a class="btn btn-secondary text-uppercase" href="{{url_for('get_all_blog_posts')}}">Read All Posts →</a>
+        </div>
+
+    </div>
+</div>
+{%endblock%}
+
+{%block footer%}
+{%include 'footer.html'%}
+{%endblock%}

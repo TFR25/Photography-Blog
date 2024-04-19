@@ -1,0 +1,39 @@
+{% include "nav.html" %}
+{%block content%}
+<header
+        class="masthead"
+        style="background-image: url('static/assets/img/sunset.png')"
+></header>
+<div class="container-sm">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <!-- Post preview-->
+            <div class="post-preview p-3">
+                <div>
+                    <a href="#">
+                        <h2>Welcome, Fellow Shutterbugs & Nature Lovers!</h2>
+                    </a>
+                    <div class="col-lg-12 mx-auto">
+                        <p>I'm Tasha Fernandez-Ross, and this little corner of the internet is
+                            where my two greatest passions collide: adventure and photography.</p>
+                        <p> For me, the best pictures aren't found in fancy studios. They're captured
+                            amidst the heart-pumping rush of exploration. Think sunrise hikes with a
+                            camera strapped to my back, chasing waterfalls through lush forests, or
+                            battling salty winds to snag that perfect ocean shot. This blog is for
+                            anyone who craves a dose of nature's beauty alongside some photography
+                            tips and tricks. So, get ready for breathtaking landscapes, epic
+                            wildlife encounters (both cute and creepy!), and maybe even a few
+                            behind-the-scenes mishaps (because hey, even the most epic shots
+                            sometimes involve getting lost or soaked to the bone!). What are you
+                            waiting for, let's explore this beautiful world we live in!</p></div>
+                    <p class="post-meta">
+                        <a href="{{url_for('get_all_blog_posts')}}">Read More</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{% include "footer.html" %}

@@ -1,0 +1,53 @@
+{% extends 'base.html'%}
+{%block title%}TFR Photography{%endblock%}
+
+{%block navbar%}
+<nav class="mx-auto d-flex flex-wrap justify-content-center justify-content-md-between py-3 mb-4" id="mainNav">
+    <div class="mx-auto py-4">
+        <a href="/"><img
+                class="navbar-brand tfr-logo-1-icon"
+                loading="lazy"
+                alt="TFR Photography Logo"
+                src="{{url_for('static', filename='assets/img/TFR_Logo.svg')}}"
+        /></a>
+        <a href="/"><img alt="TFR Signature" class="navbar-brand layer1-icon" loading="lazy"
+                         src="{{url_for('static', filename='assets/img/signature.svg')}}"/>
+        </a>
+    </div>
+    <div class="mx-auto py-3 mb-4">
+        <button type="button" class="btn btn-link"><a href={{url_for('index')}}>Home</a></button>
+        <!-- Only show Login/Register if user is logged out. Otherwise show "Log Out" -->
+        {% if not current_user.is_authenticated: %}
+        <button type="button" class="btn btn-link"><a class="nav-link" href={{url_for('login')}}>Login</a></button>
+        <button type="button" class="btn btn-link"><a class="nav-link" href={{url_for('register')}}>Register</a>
+        </button>
+        {% else: %}
+        <button type="button" class="btn btn-link"><a class="nav-link" href={{url_for('logout')}}>Log Out</a></button>
+        {% endif %}
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                <li><a href={{url_for('about')}}>About</a></li>
+                <li><a href={{url_for('contact')}}>Contact</a></li>
+                <!--                Future Categories                                  -->
+                <!--                <li><a class="dropdown-item" href="#">Landscape</a></li>-->
+                <!--                <li><a class="dropdown-item" href="#">Seascape</a></li>-->
+                <!--                <li><a class="dropdown-item" href="#">Wildlife</a></li>-->
+                <li><a class="dropdown-item" href={{url_for('get_all_blog_posts')}}>Read All Posts</a></li>
+                <li><a class="dropdown-item" href={{url_for('add_new_post')}}>Create New Post</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{%endblock%}

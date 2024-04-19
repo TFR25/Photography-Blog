@@ -1,0 +1,82 @@
+{%extends 'base.html'%}
+{%block navbar%}{%include '/nav.html'%}{%endblock%}
+{% from "bootstrap5/form.html" import render_form %}
+{%block title%}Requested Blog Post{%endblock%}
+
+{%block content%}
+<div class="carousel carousel-dark slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="{{post.img_url}}" class="img-fluid mx-auto d-block w-50 rounded border border-5" alt="...">
+        </div>
+    </div>
+</div>
+<div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="post-heading">
+                <h1>{{ post.title }}</h1>
+                <h2 class="subheading">{{ post.subtitle }}</h2>
+                <span class="meta"
+                >Posted by
+            <a href="#">{{ post.author.name }}</a>
+            on {{ post.date }}
+          </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Post Content -->
+<article>
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                {{ post.body|safe }}
+                <p class="post-meta">
+                    Posted by
+                    <!-- post.author.name is now a User object -->
+                    <a href="#">{{post.author.name}}</a>
+                    on {{post.date}}
+                    <!-- Only show delete button if user id is 1 (admin user) -->
+                    {% if current_user.id == 1: %}
+                    <a href="{{url_for('delete_post', post_id=post.id) }}">✘</a>
+                </p>
+                <!--Only show Edit Post button and Delete Post button if user id is 1 (admin user) -->
+                <div class="d-flex justify-content-end mb-4">
+                    <a
+                            class="btn btn-primary float-right"
+                            href="{{url_for('edit_post', post_id=post.id)}}"
+                    >Edit Post</a>
+                </div>
+                {%endif%}
+
+                <!--           Comments Area -->
+                <!-- Load the CKEditor -->
+                {{ckeditor.load()}}
+                <!-- Configure it with the name of the form field from CommentForm -->
+                {{ ckeditor.config(name='comment_text') }}
+                <!-- Create the Comment Form -->
+                {{render_form(form, novalidate=True, button_map={"submit": "primary"})}}
+                <div class="col-lg-8 col-md-10 mx-auto comment">
+                    <div class="commentList">
+                        <!-- Show all comments -->
+                        {%for comment in post.comments:%}
+                        {{comment.text|safe}}
+                        <p><span class="sub-text">{{comment.comment_author.name}}</span></p>
+                        {%endfor%}
+                    </div>
+                </div>
+                <!-- Pager-->
+                <div class="d-flex justify-content-end mb-4">
+                    <a class="btn btn-secondary text-uppercase" href="{{url_for('index')}}">Home →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</article>
+
+
+{%endblock%}
+{%block footer%}{%include '/footer.html'%}{%endblock%}
