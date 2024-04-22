@@ -66,7 +66,6 @@ class Posts(db.Model):
     # Parent Relationship #
     comments = relationship("Comment", back_populates="parent_post")
 
-
 # Create comment table
 class Comment(db.Model):
     __tablename__ = "comments"
@@ -127,8 +126,9 @@ def footer():
 
 @app.route('/get_all_blog_posts')
 def get_all_blog_posts():
-    result = db.session.execute(db.select(Posts))
+    result = db.session.execute(db.select(Posts).order_by(Posts.id.desc()))
     all_posts = result.scalars().all()
+
     return render_template('blogPosts.html', all_posts=all_posts, year=current_year)
 
 
@@ -159,16 +159,25 @@ def add_new_post():
     # Only allow admin to create posts
     form = CreatePostForm()
     if form.validate_on_submit():
-        new_post = Posts(
-            img_url=form.img_url.data,
-            title=form.title.data,
-            subtitle=form.subtitle.data,
-            date=date.today().strftime('%B %d, %Y'),
-            body=form.body.data,
-            author=current_user
-        )
-        db.session.add(new_post)
-        db.session.commit()
+
+        # Check if user email is already present in the database.
+        result = db.session.execute(db.select(Posts).where(Posts.title == form.title.data))
+        title = result.scalar()
+        if title:
+            # User already exists
+            flash("This title is already taken. Please create a unique title.")
+            return render_template('createPost.html', form=form, year=current_year)
+        else:
+            new_post = Posts(
+                img_url=form.img_url.data,
+                title=form.title.data,
+                subtitle=form.subtitle.data,
+                date=date.today().strftime('%B %d, %Y'),
+                body=form.body.data,
+                author=current_user
+            )
+            db.session.add(new_post)
+            db.session.commit()
         return redirect(url_for('get_all_blog_posts'))
     return render_template('createPost.html', form=form, year=current_year)
 
@@ -195,15 +204,26 @@ def edit_post(post_id):
         requested_post.author = current_user
 
         db.session.commit()
-        return redirect(url_for("get_all_blog_posts", post_id=requested_post.id))
+        return redirect(url_for("show_post", post_id=requested_post.id))
     return render_template("createPost.html", form=edit_form, is_edit=True, current_user=current_user)
 
 
 @app.route("/delete_post/<int:post_id>")
+@admin_only
 @login_required
 def delete_post(post_id):
     post_to_delete = db.get_or_404(Posts, post_id)
     db.session.delete(post_to_delete)
+    db.session.commit()
+    return redirect(url_for("get_all_blog_posts"))
+
+
+@app.route("/delete_comment/<int:id>")
+@admin_only
+@login_required
+def delete_comment(id):
+    comment_to_delete = db.get_or_404(Comment, id)
+    db.session.delete(comment_to_delete)
     db.session.commit()
     return redirect(url_for("get_all_blog_posts"))
 

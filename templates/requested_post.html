@@ -63,7 +63,9 @@
                         <!-- Show all comments -->
                         {%for comment in post.comments:%}
                         {{comment.text|safe}}
-                        <p><span class="sub-text">{{comment.comment_author.name}}</span></p>
+                        {% if current_user.id == 1: %}
+                        <p><span class="sub-text">{{comment.comment_author.name}}</span><a href="{{url_for('delete_comment', id=comment.id) }}">✘</a></p>
+                        {%endif%}
                         {%endfor%}
                     </div>
                 </div>
