@@ -18,18 +18,19 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 now = datetime.now()
 current_year = now.year
 
+
+class Base(DeclarativeBase):
+    pass
+
+
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./tfr_photography_blog.db'
-db = SQLAlchemy()
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI", "sqlite:///posts.db")
+db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 Bootstrap5(app)
 ckeditor = CKEditor(app)
 avatars = Avatars(app)
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 # Create a User table for all your registered users
@@ -65,6 +66,7 @@ class Posts(db.Model):
 
     # Parent Relationship #
     comments = relationship("Comment", back_populates="parent_post")
+
 
 # Create comment table
 class Comment(db.Model):
@@ -150,7 +152,8 @@ def show_post(post_id):
         )
         db.session.add(new_comment)
         db.session.commit()
-    return render_template('requested_post.html', post=requested_post, form=form, current_user=current_user, year=current_year)
+    return render_template('requested_post.html', post=requested_post, form=form, current_user=current_user,
+                           year=current_year)
 
 
 @app.route('/new-post', methods=['GET', 'POST'])
@@ -290,4 +293,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=False)
