@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, date
-
+import psycopg2
 from flask import Flask, redirect, url_for, flash, abort
 from flask import render_template
 from flask_avatars import Avatars
